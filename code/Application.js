@@ -8,6 +8,8 @@
 
 	friendsRead();
 
+	userInfoRead('312721846');
+
 
 	function timelineRead() {
 		// SEE: https://dev.twitter.com/docs/api/1/get/statuses/home_timeline
@@ -26,10 +28,8 @@
 	}
 
 
-	// SEE: https://dev.twitter.com/docs/api/1/get/followers/ids
-
 	function followersRead() {
-		// SEE: https://dev.twitter.com/docs/api/1/get/statuses/home_timeline
+		// SEE: https://dev.twitter.com/docs/api/1/get/followers/ids
 
 		$.ajax({
 			url: 'https://api.twitter.com/1/followers/ids.json',
@@ -67,6 +67,28 @@
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('friends ajax error', arguments);
+			}
+		});
+	}
+
+
+	function userInfoRead(userIds) {
+		// SEE: https://dev.twitter.com/docs/api/1/get/users/lookup
+
+		$.ajax({
+			url: 'https://api.twitter.com/1/users/lookup.json',
+			dataType: 'jsonp',
+			type: 'get',
+			data: {
+				user_id: userIds,
+				stringify_ids: true,
+				cursor: -1
+			},
+			success: function(data, textStatus, jqXHR) {
+				console.log('userInfo ajax success', arguments);
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('userInfo ajax error', arguments);
 			}
 		});
 	}
