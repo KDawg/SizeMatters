@@ -1,14 +1,20 @@
 // http://dryicons.com/free-icons/preview/coquette-icons-set/
 
-(function($) {
+var Application = (function($) {
 
-	///timelineRead();
+	var appView;
 
-	followersRead();
+	function initialize() {
+		appView = new SM.view.Application();
 
-	friendsRead();
+		///timelineRead();
 
-	userInfoRead('312721846');
+		followersRead();
+
+		friendsRead();
+
+		userInfoRead('312721846');
+	}
 
 
 	function timelineRead() {
@@ -94,4 +100,16 @@
 	}
 
 
+	// public interface is returned
+
+	return {
+		onInit: function() {
+			initialize();
+		}
+
+	};
+
+
 })(jQuery);
+
+SM.app = Application;
