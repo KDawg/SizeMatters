@@ -5,6 +5,8 @@ var Application = (function($) {
 	var appView;
 	var myUserInfo;
 	var friends, followers, followerUserInfo;
+	var followerView;
+
 
 	function initialize() {
 		appView = new SM.view.Application();
@@ -138,9 +140,8 @@ var Application = (function($) {
 
 
 	function debugFollowersInfoDump() {
-		followerUserInfo.each(function(user){
-			debugUserInfoDump(user);
-		});
+		followerView = new SM.view.UserInfo({collection: followerUserInfo});
+		followerView.render();
 	}
 
 
