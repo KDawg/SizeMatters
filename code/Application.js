@@ -4,7 +4,7 @@ var Application = (function($) {
 
 	var appView;
 	var myUserInfo;
-	var friends, followers, userInfo;
+	var friends, followers, followerUserInfo;
 
 	function initialize() {
 		appView = new SM.view.Application();
@@ -91,28 +91,30 @@ var Application = (function($) {
 	}
 
 
-	function debugUserInfoDump(user) {
-		console.log('name', user.get('name'),
-			'followers', user.get('followers_count'),
-			'friends', user.get('friends_count'),
-			'location', user.get('location'),
-			'tweets', user.get('statuses_count'));
+	function userInfoRead() {
+		followerUserInfo = new Backbone.Collection();
+		userSetRead(0);
 	}
 
 
-	function userInfoRead() {
+	function userSetRead(startIndex) {
 		// SEE: https://dev.twitter.com/docs/api/1/get/users/lookup
+
+		var MAX_USERS = 50;
+		var tempUserInfo, index, follower;
 		var userIds = '';
 
-		followers.each(function(follower, index, allArray) {
-			if (index < 50) {
-				userIds += follower.get('uid') + ',';
+		for (index = startIndex; index < startIndex + MAX_USERS; index += 1) {
+			follower = followers.at(index);
+			if (follower === undefined) {
+				break;
 			}
-		});
+			userIds += follower.get('uid') + ',';
+		}
 		userIds = userIds.slice(0, -1);
 
-		userInfo = new Backbone.Collection();
-		userInfo.fetch({
+		tempUserInfo = new Backbone.Collection();
+		tempUserInfo.fetch({
 			url: 'https://api.twitter.com/1/users/lookup.json',
 			data: {
 				user_id: userIds,
@@ -121,15 +123,33 @@ var Application = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data, textStatus, jqXHR) {
-				userInfo.each(function(user){
-					debugUserInfoDump(user);
-				});
-
+				followerUserInfo.add(tempUserInfo.models);
+				if (startIndex + MAX_USERS < followers.length) {
+					userSetRead(startIndex + MAX_USERS);
+				} else {
+					debugFollowersInfoDump();
+				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('userInfo ajax error', arguments);
+				console.log('userSetRead ajax error', arguments);
 			}
 		});
+	}
+
+
+	function debugFollowersInfoDump() {
+		followerUserInfo.each(function(user){
+			debugUserInfoDump(user);
+		});
+	}
+
+
+	function debugUserInfoDump(user) {
+		console.log('name', user.get('name'),
+			'followers', user.get('followers_count'),
+			'friends', user.get('friends_count'),
+			'location', user.get('location'),
+			'tweets', user.get('statuses_count'));
 	}
 
 
@@ -141,7 +161,7 @@ var Application = (function($) {
 		},
 
 		getUsers: function() {
-			return userInfo;
+			return followerUserInfo;
 		}
 
 	};
