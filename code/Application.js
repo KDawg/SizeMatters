@@ -3,18 +3,13 @@
 var Application = (function($) {
 
 	var appView;
-	var users;
+	var myUserInfo;
+	var friends, followers, userInfo;
 
 	function initialize() {
 		appView = new SM.view.Application();
 
-		///timelineRead();
-
-		followersRead();
-
-		friendsRead();
-
-		userInfoRead('312721846');
+		followersRead('312721846');
 	}
 
 
@@ -35,20 +30,17 @@ var Application = (function($) {
 	}
 
 
-	function followersRead() {
-		// SEE: https://dev.twitter.com/docs/api/1/get/followers/ids
-
-		$.ajax({
-			url: 'https://api.twitter.com/1/followers/ids.json',
-			dataType: 'jsonp',
-			type: 'get',
+	function followersRead(userId) {
+		followers = new SM.collection.Followers();
+		followers.fetch({
 			data: {
-				user_id: '312721846',
+				user_id: userId,
 				stringify_ids: true,
 				cursor: -1
 			},
+			dataType: 'jsonp',
 			success: function(data, textStatus, jqXHR) {
-				console.log('followers ajax success', arguments);
+				friendsRead('312721846')
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('followers ajax error', arguments);
@@ -57,20 +49,17 @@ var Application = (function($) {
 	}
 
 
-	function friendsRead() {
-		// SEE: https://dev.twitter.com/docs/api/1/get/friends/ids
-
-		$.ajax({
-			url: 'https://api.twitter.com/1/friends/ids.json',
-			dataType: 'jsonp',
-			type: 'get',
+	function friendsRead(userId) {
+		friends = new SM.collection.Friends();
+		friends.fetch({
 			data: {
-				user_id: '312721846',
+				user_id: userId,
 				stringify_ids: true,
 				cursor: -1
 			},
+			dataType: 'jsonp',
 			success: function(data, textStatus, jqXHR) {
-				console.log('friends ajax success', arguments);
+				myUserInfoRead();
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('friends ajax error', arguments);
@@ -79,20 +68,63 @@ var Application = (function($) {
 	}
 
 
-	function userInfoRead(userIds) {
-		// SEE: https://dev.twitter.com/docs/api/1/get/users/lookup
+	function myUserInfoRead() {
+		var userIds = '312721846';
 
-		users = new SM.collection.UserInfo();
-		users.fetch({
+		$.ajax({
+			url: 'https://api.twitter.com/1/users/lookup.json',
 			data: {
 				user_id: userIds,
 				stringify_ids: true,
 				cursor: -1
 			},
 			dataType: 'jsonp',
-			type: 'post',
 			success: function(data, textStatus, jqXHR) {
-				console.log('userInfo ajax success', arguments);
+				myUserInfo = new Backbone.Model(data[0]);
+				debugUserInfoDump(myUserInfo);
+				userInfoRead();
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('myUserInfoRead ajax error', arguments);
+			}
+		});
+	}
+
+
+	function debugUserInfoDump(user) {
+		console.log('name', user.get('name'),
+			'followers', user.get('followers_count'),
+			'friends', user.get('friends_count'),
+			'location', user.get('location'),
+			'tweets', user.get('statuses_count'));
+	}
+
+
+	function userInfoRead() {
+		// SEE: https://dev.twitter.com/docs/api/1/get/users/lookup
+		var userIds = '';
+
+		followers.each(function(follower, index, allArray) {
+			if (index < 50) {
+				userIds += follower.get('uid') + ',';
+			}
+		});
+		userIds = userIds.slice(0, -1);
+
+		userInfo = new Backbone.Collection();
+		userInfo.fetch({
+			url: 'https://api.twitter.com/1/users/lookup.json',
+			data: {
+				user_id: userIds,
+				stringify_ids: true,
+				cursor: -1
+			},
+			dataType: 'jsonp',
+			success: function(data, textStatus, jqXHR) {
+				userInfo.each(function(user){
+					debugUserInfoDump(user);
+				});
+
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('userInfo ajax error', arguments);
@@ -109,12 +141,8 @@ var Application = (function($) {
 		},
 
 		getUsers: function() {
-			return users;
-		},
-
-		getView: function() {
-			return appView
-	}
+			return userInfo;
+		}
 
 	};
 
