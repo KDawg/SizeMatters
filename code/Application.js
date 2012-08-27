@@ -3,6 +3,7 @@
 var Application = (function($) {
 
 	var appView;
+	var users;
 
 	function initialize() {
 		appView = new SM.view.Application();
@@ -81,15 +82,15 @@ var Application = (function($) {
 	function userInfoRead(userIds) {
 		// SEE: https://dev.twitter.com/docs/api/1/get/users/lookup
 
-		$.ajax({
-			url: 'https://api.twitter.com/1/users/lookup.json',
-			dataType: 'jsonp',
-			type: 'get',
+		users = new SM.collection.UserInfo();
+		users.fetch({
 			data: {
 				user_id: userIds,
 				stringify_ids: true,
 				cursor: -1
 			},
+			dataType: 'jsonp',
+			type: 'post',
 			success: function(data, textStatus, jqXHR) {
 				console.log('userInfo ajax success', arguments);
 			},
@@ -105,7 +106,15 @@ var Application = (function($) {
 	return {
 		onInit: function() {
 			initialize();
-		}
+		},
+
+		getUsers: function() {
+			return users;
+		},
+
+		getView: function() {
+			return appView
+	}
 
 	};
 
