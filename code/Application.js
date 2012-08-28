@@ -78,6 +78,7 @@ var Application = (function($) {
 
 	function userInfoRead() {
 		followerUserInfo = new Backbone.Collection();
+		followerUserInfo.add(myUserInfo);
 		userSetRead(0);
 	}
 
@@ -144,8 +145,11 @@ var Application = (function($) {
 			initialize();
 		},
 
-		getUsers: function() {
-			return followerUserInfo;
+		onSortBy: function(keyName) {
+			var sortedArray = followerUserInfo.sortBy(function(userModel) {
+				return userModel.get(keyName);
+			});
+			followerUserInfo.reset(sortedArray);
 		}
 
 	};

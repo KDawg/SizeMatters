@@ -21,6 +21,7 @@ SM.view.UserInfo = Backbone.View.extend({
 		_.bindAll(this);
 
 		this.collection.bind('change', this.render);
+		this.collection.bind('reset', this.render);
 	},
 
 	render: function() {

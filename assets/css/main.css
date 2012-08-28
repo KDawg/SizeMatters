@@ -46,6 +46,8 @@ q:before, q:after, blockquote:before, blockquote:after {
     background-color: #111111;
     color: white;
     font-size: 24px; }
+  .row .header-highlight {
+    color: #ffe103; }
   .row.user {
     background-color: #e4e4e4;
     border-bottom: 1px solid #acacac;

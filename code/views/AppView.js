@@ -3,7 +3,7 @@ SM.view.Application = Backbone.View.extend({
 	el: 'body',
 
 	initialize: function() {
-
+		this.prevSortEl = null;
 	},
 
 	events: {
@@ -14,24 +14,34 @@ SM.view.Application = Backbone.View.extend({
 		'click #location-header': 'onLocationSort'
 	},
 
-	onNameSort: function() {
-		alert('sort list by name');
+	sortListBy: function(event, keyName) {
+		var curSortEl = $(event.currentTarget);
+		if (this.prevSortEl !== null) {
+			this.prevSortEl.removeClass('header-highlight');
+		}
+		curSortEl.addClass('header-highlight');
+		this.prevSortEl = curSortEl;
+		SM.app.onSortBy(keyName);
 	},
 
-	onFollowerSort: function() {
-		alert('sort list by follower');
+	onNameSort: function(event) {
+		this.sortListBy(event, 'name');
 	},
 
-	onFriendSort: function() {
-		alert('sort list by friend');
+	onFollowerSort: function(event) {
+		this.sortListBy(event, 'followers_count');
 	},
 
-	onTweetSort: function() {
-		alert('sort list by tweet');
+	onFriendSort: function(event) {
+		this.sortListBy(event, 'friends_count');
 	},
 
-	onLocationSort: function() {
-		alert('sort list by location');
+	onTweetSort: function(event) {
+		this.sortListBy(event, 'statuses_count');
+	},
+
+	onLocationSort: function(event) {
+		this.sortListBy(event, 'location');
 	}
 
 });
