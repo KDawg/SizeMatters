@@ -15,23 +15,6 @@ var Application = (function($) {
 	}
 
 
-	function timelineRead() {
-		// SEE: https://dev.twitter.com/docs/api/1/get/statuses/home_timeline
-
-		$.ajax({
-			url: 'https://twitter.com/statuses/user_timeline/312721846.json',
-			dataType: 'jsonp',
-			type: 'get',
-			success: function(data, textStatus, jqXHR) {
-				console.log('user_timeline ajax success', arguments);
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('user_timeline ajax error', arguments);
-			}
-		});
-	}
-
-
 	function followersRead(userId) {
 		followers = new SM.collection.Followers();
 		followers.fetch({

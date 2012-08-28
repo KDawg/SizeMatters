@@ -4,13 +4,14 @@ SM.view.UserInfo = Backbone.View.extend({
 
 	el: $('#user-list'),
 
-	template: '<li>' +
-		'name[<%= name %>] ' +
-		'followers[<%= followers_count %>)] ' +
-		'friends[<%= friends_count %>] ' +
-		'location[<%= location %>] ' +
-		'tweets[<%= statuses_count %>] ' +
-		'</li>',
+	template:
+		'<div class="row user" data-cid="<%= cid %>">' +
+			'<div class="item wide"><%= name %></div>' +
+			'<div class="item"><%= followers_count %></div>' +
+			'<div class="item"><%= friends_count %></div>' +
+			'<div class="item"><%= statuses_count %></div>' +
+			'<div class="item medium"><%= location %></div>' +
+		'</div>',
 
 	events: {
 		'click': 'onSelectChoice'
@@ -27,8 +28,10 @@ SM.view.UserInfo = Backbone.View.extend({
 		var dataContext, html;
 		var self = this;
 
+		self.$el.empty();
 		this.collection.each(function(item) {
 			dataContext = item.toJSON();
+			dataContext.cid = item.cid;
 			html = compiledTemplate(dataContext);
 			self.$el.append(html);
 		});
@@ -37,7 +40,13 @@ SM.view.UserInfo = Backbone.View.extend({
 	},
 
 	onSelectChoice: function(event) {
-		alert('booga');
-		console.log(event.target);
+		var parent = $(event.target.parentElement);
+		var cid = parent.data('cid');
+		var userModel;
+
+		if (cid !== undefined) {
+			userModel = this.collection.getByCid(cid);
+			console.log(userModel.attributes);
+		}
 	}
 });
