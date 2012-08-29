@@ -2,6 +2,7 @@
 
 var Application = (function($) {
 
+	var localUserId = 312721846;
 	var appView;
 	var myUserInfo;
 	var friends, followers, followerUserInfo;
@@ -11,7 +12,7 @@ var Application = (function($) {
 	function initialize() {
 		appView = new SM.view.Application();
 
-		followersRead('312721846');
+		followersRead(localUserId);
 	}
 
 
@@ -25,7 +26,7 @@ var Application = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data, textStatus, jqXHR) {
-				friendsRead('312721846')
+				friendsRead(localUserId);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('followers ajax error', arguments);
@@ -54,12 +55,10 @@ var Application = (function($) {
 
 
 	function myUserInfoRead() {
-		var userIds = '312721846';
-
 		$.ajax({
 			url: 'https://api.twitter.com/1/users/lookup.json',
 			data: {
-				user_id: userIds,
+				user_id: localUserId,
 				stringify_ids: true,
 				cursor: -1
 			},
@@ -150,8 +149,11 @@ var Application = (function($) {
 				return userModel.get(keyName);
 			});
 			followerUserInfo.reset(sortedArray);
-		}
+		},
 
+		localUser: function() {
+			return localUserId;
+		}
 	};
 
 

@@ -23,7 +23,7 @@ q:before, q:after, blockquote:before, blockquote:after {
   content: ""; }
 
 .row {
-  font-family: tahoma, arial, herlvetica, sans-serif; }
+  font-family: tahoma, arial, helvetica, sans-serif; }
   .row:after {
     content: "";
     display: table;
@@ -46,10 +46,16 @@ q:before, q:after, blockquote:before, blockquote:after {
     background-color: #111111;
     color: white;
     font-size: 24px; }
+  .row.user-local {
+    background-color: #ffe103;
+    color: #111111;
+    font-weight: bold; }
+  .row.user-follower {
+    background-color: #e4e4e4;
+    color: #111111; }
   .row .header-highlight {
     color: #ffe103; }
   .row.user {
-    background-color: #e4e4e4;
     border-bottom: 1px solid #acacac;
-    color: #111111;
-    font-size: 16px; }
+    font-family: 'Lucida Sans', tahoma, arial, helvetica, sans-serif;
+    font-size: 18px; }

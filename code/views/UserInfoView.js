@@ -26,15 +26,24 @@ SM.view.UserInfo = Backbone.View.extend({
 
 	render: function() {
 		var compiledTemplate = _.template(this.template);
-		var dataContext, html;
+		var dataContext, html, el;
 		var self = this;
 
 		self.$el.empty();
 		this.collection.each(function(item) {
 			dataContext = item.toJSON();
 			dataContext.cid = item.cid;
+
 			html = compiledTemplate(dataContext);
-			self.$el.append(html);
+			el = $(html);
+
+			if (item.get('id') == SM.app.localUser()) {
+				el.addClass('user-local');
+			} else {
+				el.addClass('user-follower');
+			}
+
+			self.$el.append(el);
 		});
 
 		return this;
