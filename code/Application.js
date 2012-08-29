@@ -151,6 +151,10 @@ var Application = (function($) {
 			followerUserInfo.reset(sortedArray);
 		},
 
+		followers: function() {
+			return followerUserInfo;
+		},
+
 		localUser: function() {
 			return localUserId;
 		}

@@ -3,9 +3,35 @@
 @import "_common_colors_sizes.scss";
 
 
+body {
+	font-family: 'Lucida Sans', tahoma, arial, helvetica, sans-serif;
+}
+
+
+.content {
+	margin: auto;
+	padding-bottom: 20px;
+	padding-top: 10px;
+	width: 685px;
+}
+
+
+h1 {
+	font-size: 32px;
+	text-align: center;
+	padding-bottom: 5px;
+}
+
+
+h2 {
+	font-size: 18px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+
 .row {
 	@include clearFixAfter();
-	font-family: tahoma, arial, helvetica, sans-serif;
 
 	.item {
 		@include textEllipsis();
@@ -29,6 +55,7 @@
 	&.header {
 		background-color: $color-dark;
 		color: $color-light;
+		font-family: tahoma, arial, helvetica, sans-serif;
 		font-size: 24px;
 	}
 
@@ -49,7 +76,6 @@
 
 	&.user {
 		border-bottom: 1px solid $color-mid-dark;
-		font-family: 'Lucida Sans', tahoma, arial, helvetica, sans-serif;
 		font-size: 18px;
 	}
 }
